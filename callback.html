@@ -18,8 +18,8 @@
 
         const URL = 'https://twimi.cn/api/';
         const HEADER = {'content-type': 'application/x-www-form-urlencoded'};
-        const CLIENT_ID = '';
-        const CLIENT_SECRET = '';
+        const CLIENT_ID = '1679091c5a880faf6fb5e6087eb1b2dc';
+        const CLIENT_SECRET = '8ed8540f22455fc5bdc8c286263aa0a2';
 
         fetch(`${URL}oauth/token`, {
             method: 'post',
@@ -33,7 +33,10 @@
                 headers: HEADER,
                 body: `client_id=${CLIENT_ID}&token=${token}`
             }).then(r2 => r2.json()).then(r2 => {
-                console.log(r2);
+                localStorage.setItem('uid', r2.uid);
+                localStorage.setItem('username', r2.username);
+                localStorage.setItem('nickname', r2.nickname);
+                window.location = '/chat/index.html';
             })
         });
     })();

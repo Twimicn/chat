@@ -354,34 +354,36 @@
         function appendMsg(msg, pos) {
             let message = document.createElement('div');
             message.classList.add('message', pos);
-            let avatar = `<img alt="avatar" class="avatar" src="https://www.tinygraphs.com/squares/${msg.username}?theme=frogideas&numcolors=4&size=48&fmt=svg"/>`;
+            let avatar = `<img alt="avatar" class="avatar" src="https://twimi.cn/user/avatar/${msg.uid}"/>`;
+            let inBubble;
             switch (msg.type) {
                 case "image":
-                    message.innerHTML = `<span>${msg.username}</span>${avatar}<div class="bubble"><img alt="content" class="msg-img" src="${msg.content}" /></div>`;
+                    inBubble = `<img alt="content" class="msg-img" src="${msg.content}" />`;
                     break;
                 case "text":
-                    message.innerHTML = `<span>${msg.username}</span>${avatar}<div class="bubble">${msg.content}</div>`;
+                    inBubble = msg.content;
                     break;
                 case "tts":
-                    message.innerHTML = `<span>${msg.username}</span>${avatar}<div class="bubble"><button class="btn-play" onclick="playTTS('${msg.content}')">▶</button> ${curLang.play_voice}</div>`;
+                    inBubble = `<button class="btn-play" onclick="playTTS('${msg.content}')">▶</button> ${curLang.play_voice}`;
                     break;
                 default:
-                    message.innerHTML = `<span>${msg.username}</span>${avatar}<div class="bubble">${curLang.type_unknown}</div>`;
+                    inBubble = curLang.type_unknown;
                     break;
             }
+            message.innerHTML = `<span>${msg.nickname}</span>${avatar}<div class="bubble">${inBubble}</div>`;
             msg_container.append(message);
             message.scrollIntoView();
         }
 
-        function SimpleChat(username, conf) {
-            let rid = conf.room || 1;
-            let token = conf.token || '';
-            let access_token = conf.access_token;
+        function SimpleChat(userConf, chatConf) {
+            let rid = chatConf.room || 1;
+            let token = chatConf.token || '';
+            let access_token = chatConf.access_token;
             let password = '';
             let aes = null;
-            if (conf.password) {
-                password = conf.password;
-                AES(conf.password).then(a => {
+            if (chatConf.password) {
+                password = chatConf.password;
+                AES(chatConf.password).then(a => {
                     aes = a;
                 })
             }
@@ -408,17 +410,21 @@
                         aes.decode(data.content).then(txt => {
                             data.content = txt;
                             appendMsg({
+                                uid: data.uid,
                                 username: data.username,
+                                nickname: data.nickname,
                                 content: data.content,
                                 type: data.type
-                            }, data.username === username ? 'right' : 'left');
+                            }, data.username === userConf.username ? 'right' : 'left');
                         })
                     } else {
                         appendMsg({
+                            uid: data.uid,
                             username: data.username,
+                            nickname: data.nickname,
                             content: data.content,
                             type: data.type
-                        }, data.username === username ? 'right' : 'left');
+                        }, data.username === userConf.username ? 'right' : 'left');
                     }
                 });
             });
@@ -427,7 +433,9 @@
                     socket.close();
                 }, send: function (content, type, callback) {
                     let msg = {
-                        username: username,
+                        uid: userConf.uid,
+                        username: userConf.username,
+                        nickname: userConf.nickname,
                         content: content,
                         type: type || 'text',
                         timestamp: new Date().getTime()
@@ -437,7 +445,7 @@
                         aes.encode(msg.content).then(ed => {
                             msg.content = ed;
                             socket.send(JSON.stringify(msg));
-                            fetch(`https://kvdb.io/${conf.token}/msg_${rid}_${msg.timestamp}`, {
+                            fetch(`https://kvdb.io/${chatConf.token}/msg_${rid}_${msg.timestamp}`, {
                                 'method': 'POST', 'body': JSON.stringify(msg)
                             }).then(r => {
                                 if (typeof callback === 'function') callback(msg.timestamp);
@@ -445,7 +453,7 @@
                         })
                     } else {
                         socket.send(JSON.stringify(msg));
-                        fetch(`https://kvdb.io/${conf.token}/msg_${rid}_${msg.timestamp}`, {
+                        fetch(`https://kvdb.io/${chatConf.token}/msg_${rid}_${msg.timestamp}`, {
                             'method': 'POST', 'body': JSON.stringify(msg)
                         }).then(r => {
                             if (typeof callback === 'function') callback(msg.timestamp);
@@ -458,42 +466,40 @@
         window.onload = () => {
             if (isWx() || isQQ()) header.style.display = 'none';
             initLanguage().then(res => {
-                let username = localStorage.getItem("username");
-                initUsername(username);
+                initUser();
             }).catch(err => {
                 msgBox(curLang.network_error);
             });
         };
 
         window.addEventListener('hashchange', function (e) {
-            chat.close();
-            let username = localStorage.getItem("username");
-            initUsername(username);
+            if (chat) {
+                chat.close();
+                chat = null
+            }
+            initUser();
         });
 
-        function initUsername(curUsername) {
-            if (!curUsername) {
-                dialog.title = curLang.prompt_username;
-                dialog.innerHTML = '<input id="username" type="text" class="input-text" style="height: 32px;width: 300px;">';
-                let txt_username = document.getElementById('username');
-                dialog.show(e => {
-                    let username = txt_username.value;
-                    if (username) {
-                        localStorage.setItem("username", username);
-                        initChat(username);
-                    } else {
-                        initUsername();
-                    }
-                }, e => {
-                    initUsername();
-                });
+        function initUser() {
+            let uid = localStorage.getItem("uid");
+            let expire = (localStorage.getItem("expire") || 0) * 1000;
+            if (!uid || (uid && expire > (new Date()).getTime())) {
+                window.location = "https://twimi.cn/oauth/authorize?client_id=1679091c5a880faf6fb5e6087eb1b2dc&redirect_uri=" + encodeURI('https://os.twimi.cn/chat/callback.html');
             } else {
-                initChat(curUsername);
+                initChat();
             }
         }
 
-        function initChat(username) {
+        function initChat() {
             let hash = location.hash.substr(1);
+            let uid = localStorage.getItem("uid");
+            let username = localStorage.getItem("username");
+            let nickname = localStorage.getItem("nickname");
+            let userConf = {
+                uid: uid,
+                username: username,
+                nickname: nickname,
+            };
             loadConf(hash).then(r => {
                 chatConf.room = r.room;
                 if (r.room > 1) {
@@ -501,16 +507,16 @@
                 }
                 if (r.password) {
                     let password = localStorage.getItem(`hash_${hash}`);
-                    initPassword(hash, username, r.password, password);
+                    initPassword(hash, userConf, r.password, password);
                 } else {
-                    chat = SimpleChat(username, chatConf);
+                    chat = SimpleChat(userConf, chatConf);
                 }
             }).catch(err => {
                 msgBox(curLang.network_error);
             });
         }
 
-        function initPassword(hash, username, passHash, password) {
+        function initPassword(hash, userConf, passHash, password) {
             if (!password) {
                 dialog.title = curLang.prompt_password;
                 dialog.innerHTML = '<input id="password" type="text" class="input-text" style="height: 32px;width: 300px;">';
@@ -522,20 +528,20 @@
                             if (checkHash === passHash) {
                                 localStorage.setItem(`hash_${hash}`, password);
                                 chatConf.password = password;
-                                chat = SimpleChat(username, chatConf);
+                                chat = SimpleChat(userConf, chatConf);
                             } else {
-                                initPassword(hash, username, passHash);
+                                initPassword(hash, userConf, passHash);
                             }
                         });
                     } else {
-                        initPassword(hash, username, passHash);
+                        initPassword(hash, userConf, passHash);
                     }
                 }, e => {
-                    initPassword(hash, username, passHash);
+                    initPassword(hash, userConf, passHash);
                 });
             } else {
                 chatConf.password = password;
-                chat = SimpleChat(username, chatConf);
+                chat = SimpleChat(userConf, chatConf);
             }
         }
 
