@@ -484,6 +484,10 @@
             let uid = localStorage.getItem("uid");
             let expire = (localStorage.getItem("expire") || 0) * 1000;
             if (!uid || (uid && expire < (new Date()).getTime())) {
+                let hash = location.hash.substr(1);
+                if (hash) {
+                    localStorage.setItem('preHash', hash);
+                }
                 window.location = "https://twimi.cn/oauth/authorize?client_id=1679091c5a880faf6fb5e6087eb1b2dc&redirect_uri=" + encodeURI('https://os.twimi.cn/chat/callback.html');
             } else {
                 initChat();

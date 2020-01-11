@@ -37,6 +37,11 @@
                     localStorage.setItem('uid', r2.uid);
                     localStorage.setItem('username', r2.username);
                     localStorage.setItem('nickname', r2.nickname);
+                    let hash = localStorage.getItem('preHash') || '';
+                    if (hash) {
+                        localStorage.removeItem('preHash');
+                    }
+                    window.location = "/chat/index.html" + (hash ? ('#' + hash) : '');
                 }
             })
         });
