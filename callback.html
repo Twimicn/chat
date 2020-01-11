@@ -33,9 +33,11 @@
                 headers: HEADER,
                 body: `client_id=${CLIENT_ID}&token=${token}`
             }).then(r2 => r2.json()).then(r2 => {
-                localStorage.setItem('uid', r2.uid);
-                localStorage.setItem('username', r2.username);
-                localStorage.setItem('nickname', r2.nickname);
+                if (r2.uid && r2.uid > 0) {
+                    localStorage.setItem('uid', r2.uid);
+                    localStorage.setItem('username', r2.username);
+                    localStorage.setItem('nickname', r2.nickname);
+                }
             })
         });
     })();
