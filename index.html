@@ -564,21 +564,25 @@
         btn_pic.addEventListener('click', _ => pic_file.click());
 
         pic_file.addEventListener('change', ev => {
-            if (ev.target.files.length > 0) {
-                let url = window.URL.createObjectURL(ev.target.files[0]);
-                dialog.title = curLang.confirm_picture;
-                dialog.innerHTML = `<div class="preview-box"><img src="${url}" alt="Preview" class="img-responsive"/></div>`;
-                dialog.show(e => {
-                    let data = new FormData();
-                    data.append('file', ev.target.files[0]);
-                    fetch("https://api.globalupload.io/transport/add", {method: 'post', mode: 'cors', body: data,})
-                        .then(res => res.json()).then(res => {
-                        chat.send('https://ipfs.globalupload.io/' + res.Hash, 'image');
-                    })
-                }, e => {
-                    pic_file.value = '';
-                });
+            let items = ev.target.files;
+            if (items && items.length > 0) {
+                uploadPicture(items[0]);
             }
+        });
+
+        document.addEventListener('paste', ev => {
+            let items = ev.clipboardData.items;
+            let img = null;
+            if (items && items.length > 0) {
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        img = items[i].getAsFile();
+                        break;
+                    }
+                }
+            }
+            if (!img) return;
+            uploadPicture(img);
         });
 
         btn_tts.addEventListener('click', ev => {
@@ -620,6 +624,22 @@
             dialog.innerHTML = msg;
             dialog.cancel = "";
             dialog.visible = true;
+        }
+
+        function uploadPicture(imgFile) {
+            let url = window.URL.createObjectURL(imgFile);
+            dialog.title = curLang.confirm_picture;
+            dialog.innerHTML = `<div class="preview-box"><img src="${url}" alt="Preview" class="img-responsive"/></div>`;
+            dialog.show(e => {
+                let data = new FormData();
+                data.append('file', imgFile);
+                fetch("https://api.globalupload.io/transport/add", {method: 'post', mode: 'cors', body: data,})
+                    .then(res => res.json()).then(res => {
+                    chat.send('https://ipfs.globalupload.io/' + res.Hash, 'image');
+                })
+            }, e => {
+                pic_file.value = '';
+            });
         }
 
         function isWx() {

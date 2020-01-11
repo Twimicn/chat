@@ -113,7 +113,7 @@
     visibility: hidden;
     transform: scale(1.1);
     transition: visibility 0s linear .25s,opacity .25s 0s,transform .25s;
-    z-index: 1;
+    z-index: 100;
 }
 .visible {
     opacity: 1;
