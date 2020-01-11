@@ -375,7 +375,7 @@
             message.scrollIntoView();
         }
 
-        function SimpleChat(userConf, chatConf) {
+        function TinnyChat(userConf, chatConf) {
             let rid = chatConf.room || 1;
             let token = chatConf.token || '';
             let access_token = chatConf.access_token;
@@ -393,10 +393,10 @@
                 if (password) {
                     aes.decode(msg.content).then(txt => {
                         msg.content = txt;
-                        appendMsg(msg, "left");
+                        appendMsg(msg, msg.username === userConf.username ? 'right' : 'left');
                     })
                 } else {
-                    appendMsg(msg, "left");
+                    appendMsg(msg, msg.username === userConf.username ? 'right' : 'left');
                 }
             };
             fetch(`https://kvdb.io/${token}/?regex=%5Emsg_${rid}_&format=json&values=true`).catch(err => {
@@ -513,7 +513,7 @@
                     let password = localStorage.getItem(`hash_${hash}`);
                     initPassword(hash, userConf, r.password, password);
                 } else {
-                    chat = SimpleChat(userConf, chatConf);
+                    chat = TinnyChat(userConf, chatConf);
                 }
             }).catch(err => {
                 msgBox(curLang.network_error);
@@ -532,7 +532,7 @@
                             if (checkHash === passHash) {
                                 localStorage.setItem(`hash_${hash}`, password);
                                 chatConf.password = password;
-                                chat = SimpleChat(userConf, chatConf);
+                                chat = TinnyChat(userConf, chatConf);
                             } else {
                                 initPassword(hash, userConf, passHash);
                             }
@@ -545,7 +545,7 @@
                 });
             } else {
                 chatConf.password = password;
-                chat = SimpleChat(userConf, chatConf);
+                chat = TinnyChat(userConf, chatConf);
             }
         }
 

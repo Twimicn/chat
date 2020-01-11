@@ -5,6 +5,7 @@
     <title>Loading</title>
 </head>
 <body>
+<h2 id="msg"></h2>
 <script>
     (function () {
         function getQueryString(name) {
@@ -21,30 +22,35 @@
         const CLIENT_ID = '1679091c5a880faf6fb5e6087eb1b2dc';
         const CLIENT_SECRET = '8ed8540f22455fc5bdc8c286263aa0a2';
 
-        fetch(`${URL}oauth/token`, {
-            method: 'post',
-            headers: HEADER,
-            body: `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&code=` + getQueryString("code")
-        }).then(r => r.json()).then(r => {
-            localStorage.setItem('expire', r.expire);
-            let token = r.token;
-            fetch(`${URL}user/info`, {
+        let code = getQueryString("code");
+        if (code) {
+            fetch(`${URL}oauth/token`, {
                 method: 'post',
                 headers: HEADER,
-                body: `client_id=${CLIENT_ID}&token=${token}`
-            }).then(r2 => r2.json()).then(r2 => {
-                if (r2.uid && r2.uid > 0) {
-                    localStorage.setItem('uid', r2.uid);
-                    localStorage.setItem('username', r2.username);
-                    localStorage.setItem('nickname', r2.nickname);
-                    let hash = localStorage.getItem('preHash') || '';
-                    if (hash) {
-                        localStorage.removeItem('preHash');
+                body: `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&code=` + code
+            }).then(r => r.json()).then(r => {
+                localStorage.setItem('expire', r.expire);
+                let token = r.token;
+                fetch(`${URL}user/info`, {
+                    method: 'post',
+                    headers: HEADER,
+                    body: `client_id=${CLIENT_ID}&token=${token}`
+                }).then(r2 => r2.json()).then(r2 => {
+                    if (r2.uid && r2.uid > 0) {
+                        localStorage.setItem('uid', r2.uid);
+                        localStorage.setItem('username', r2.username);
+                        localStorage.setItem('nickname', r2.nickname);
+                        let hash = localStorage.getItem('preHash') || '';
+                        if (hash) {
+                            localStorage.removeItem('preHash');
+                        }
+                        window.location = "/chat/index.html" + (hash ? ('#' + hash) : '');
                     }
-                    window.location = "/chat/index.html" + (hash ? ('#' + hash) : '');
-                }
-            })
-        });
+                })
+            });
+        } else {
+            document.getElementById('msg').innerText = 'Forbidden';
+        }
     })();
 </script>
 </body>
