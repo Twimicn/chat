@@ -47,13 +47,47 @@
             }
         }
 
+        .app-container {
+            box-sizing: border-box;
+        }
+
+        .room-container {
+            box-sizing: border-box;
+            padding-bottom: 100px;
+            width: 30%;
+            height: calc(100% - 100px);
+            overflow-y: auto;
+            display: none;
+        }
+
+        .msg-container {
+            box-sizing: border-box;
+            padding-bottom: 100px;
+            width: 100%;
+            height: calc(100% - 100px);
+            overflow-y: auto;
+            display: inline-block;
+        }
+
+        .msg-div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .left .msg-div {
+            margin-left: 15px;
+        }
+
+        .right .msg-div {
+            margin-right: 15px;
+        }
+
         .bubble {
             display: inline-block;
             position: relative;
             padding: 8px;
             font-size: 14px;
             background-color: #fff;
-            margin-top: 20px;
             border-radius: 4px;
             max-width: 200px;
             font-weight: 400;
@@ -70,7 +104,6 @@
         }
 
         .left .bubble {
-            left: 15px;
             border: 1px solid #d5d5d5;
         }
 
@@ -89,7 +122,6 @@
         }
 
         .right .bubble {
-            right: 15px;
             background-color: #3c9;
             border: 1px solid #009688;
             color: white;
@@ -127,14 +159,11 @@
         }
 
         .message.right span {
-            position: absolute;
-            right: 74px;
             font-size: 14px;
+            margin-left: auto;
         }
 
         .message.left span {
-            position: absolute;
-            left: 74px;
             font-size: 14px;
         }
 
@@ -237,7 +266,9 @@
 </head>
 <body>
 <div class="title-bar">Chat</div>
-<div id="msg_container" style="margin-bottom: 100px;">
+<div class="app-container">
+    <div id="room_list" class="room-container"></div>
+    <div id="msg_container" class="msg-container"></div>
 </div>
 <div class="bottom-bar">
     <button class="btn" id="btn_pic">图片</button>
@@ -375,7 +406,7 @@
                     inBubble = curLang.type_unknown;
                     break;
             }
-            message.innerHTML = `<span>${msg.nickname}</span>${avatar}<div class="bubble">${inBubble}</div>`;
+            message.innerHTML = `${avatar}<div class="msg-div"><span>${msg.nickname}</span><div class="bubble">${inBubble}</div></div>`;
             msg_container.append(message);
             message.scrollIntoView();
         }
