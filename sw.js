@@ -4,10 +4,8 @@ self.addEventListener('install', function (event) {
     let languageCode = (navigator.language || 'zh-cn').toLocaleLowerCase();
     if (languages.indexOf(languageCode) === -1) languageCode = 'zh-cn';
     let baseDir = '/';
-    if (location.href.indexOf('/yestagram.github.io/') !== -1) {
-        baseDir = '/yestagram.github.io/';
-    } else if (location.href.indexOf('/ipns/yestagram.ml/') !== -1) {
-        baseDir = '/ipns/yestagram.ml/';
+    if (location.href.indexOf('/chat/') !== -1) {
+        baseDir = '/chat/';
     }
     event.waitUntil(
         caches.open(CATCH_VER).then(function (cache) {

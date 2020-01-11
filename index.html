@@ -1,7 +1,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8">
-    <title>Yestagram</title>
+    <title>Chat</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
     <link rel="icon" href="favicon.ico">
@@ -231,7 +231,7 @@
     </style>
 </head>
 <body>
-<div class="title-bar">Yestagram</div>
+<div class="title-bar">Chat</div>
 <div id="msg_container" style="margin-bottom: 100px;">
 </div>
 <div class="bottom-bar">
@@ -256,7 +256,7 @@
         let btn_send = document.getElementById('btn_send');
         let chat = null;
 
-        let jsonBox = 'https://jsonbox.io/yestagram_chat_room_config/';
+        let jsonBox = 'https://jsonbox.io/twimi_os_chat_room_config/';
         let reqHead = {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -270,12 +270,9 @@
         if ('serviceWorker' in navigator) {
             let sw = '/sw.js';
             let scope = '/';
-            if (location.href.indexOf('/yestagram.github.io/') !== -1) {
-                sw = '/yestagram.github.io/sw.js';
-                scope = '/yestagram.github.io/';
-            } else if (location.href.indexOf('/ipns/yestagram.ml/') !== -1) {
-                sw = '/ipns/yestagram.ml/sw.js';
-                scope = '/ipns/yestagram.ml/';
+            if (location.href.indexOf('/chat/') !== -1) {
+                sw = '/chat/sw.js';
+                scope = '/chat/';
             }
             navigator.serviceWorker.register(sw, {scope: scope}).then(res => {
                 console.log('ServiceWorker Init');
@@ -288,7 +285,7 @@
 
         async function createConf(roomName, password) {
             let roomId = getRandom();
-            let roomNum = +(await (await fetch(`${jsonBox}free/5e11e2d77385170017b237b6`)).json()).length;
+            let roomNum = +(await (await fetch(`${jsonBox}free/5e19aad2d124b700177ffced`)).json()).length;
             roomNum++;
             let roomData = {
                 name: roomName,
@@ -300,7 +297,7 @@
             let created = await (await fetch(`${jsonBox}${roomId}`, {
                 'method': 'POST', 'body': JSON.stringify(roomData), headers: reqHead,
             })).json();
-            let updated = await (await fetch(`${jsonBox}free/5e11e2d77385170017b237b6`, {
+            let updated = await (await fetch(`${jsonBox}free/5e19aad2d124b700177ffced`, {
                 'method': 'PUT', 'body': JSON.stringify({length: roomNum})
                 , headers: reqHead,
             })).json();
