@@ -684,6 +684,22 @@
             uploadFile(img);
         });
 
+        msg_container.addEventListener('dragover', e => {
+            e.stopPropagation();
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        });
+
+        msg_container.addEventListener("drop", e => {
+            e.stopPropagation();
+            e.preventDefault();
+            let items = e.dataTransfer.files;
+            if (items && items.length > 0) {
+                uploadFile(items[0]);
+            }
+        });
+
+
         btn_tts.addEventListener('click', ev => {
             dialog.title = curLang.input_voice;
             dialog.innerHTML = '<input id="txt_tts" type="text" class="input-text" style="height: 32px;width: 300px;">';
@@ -720,7 +736,7 @@
         };
 
         window.playVideo = function (url) {
-            dialog.title = '';
+            dialog.title = ' ';
             dialog.innerHTML = `<video src="${url}" controls preload="metadata" style="max-height:500px;max-width:100%;"></video>`;
             dialog.show();
         };
