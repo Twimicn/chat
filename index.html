@@ -738,7 +738,11 @@
         window.playVideo = function (url) {
             dialog.title = ' ';
             dialog.innerHTML = `<video src="${url}" controls preload="metadata" style="max-height:500px;max-width:100%;"></video>`;
-            dialog.show();
+            dialog.show(e => {
+                dialog.innerHTML = ''
+            }, e => {
+                dialog.innerHTML = ''
+            });
         };
 
         function msgBox(msg) {
