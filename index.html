@@ -17,6 +17,10 @@
             background: #f1f1f1;
         }
 
+        .view-hide {
+            display: none;
+        }
+
         .title-bar {
             position: sticky;
             top: 0;
@@ -52,7 +56,7 @@
         .room-container {
             padding-bottom: 100px;
             width: 30%;
-            height: calc(100% - 100px);
+            height: calc(100% - 3.25rem);
             overflow-y: auto;
             display: none;
         }
@@ -60,9 +64,13 @@
         .msg-container {
             padding-bottom: 100px;
             width: 100%;
-            height: calc(100% - 100px);
+            height: calc(100% - 6.25rem);
             overflow-y: auto;
             display: inline-block;
+        }
+
+        .title-bar.view-hide + .app-container .msg-container {
+            height: calc(100% - 3.25rem);
         }
 
         .msg-div {
@@ -489,7 +497,7 @@
         }
 
         window.onload = () => {
-            if (isWx() || isQQ()) header.style.display = 'none';
+            if (isWx() || isQQ()) header.classList.add('view-hide');
             initLanguage().then(res => {
                 initUser();
             }).catch(err => {
