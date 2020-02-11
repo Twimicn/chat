@@ -13,11 +13,6 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://c.bunnies.cc/src/cappuccino.css">
     <style>
-        * {
-            padding: 0;
-            margin: 0;
-        }
-
         body {
             background: #f1f1f1;
         }
@@ -25,12 +20,13 @@
         .title-bar {
             position: sticky;
             top: 0;
+            font-size: 1rem;
             background: #6c7c96;
             color: white;
             text-align: center;
-            padding: 14px;
+            padding: .8rem;
             z-index: 99;
-            box-shadow: 0 1px 16px #888888;
+            box-shadow: 0 0.1rem 1rem #888888;
         }
 
         .bottom-bar {
@@ -39,23 +35,21 @@
             background-color: #ededed;
             position: fixed;
             bottom: 0;
-            height: 3rem;
+            height: 3.25rem;
             padding: 0.5rem;
         }
 
         @media screen and (max-aspect-ratio: 9/16) {
             .bottom-bar {
-                padding-bottom: 1.5rem;
-                height: 4rem;
+                padding-bottom: 2rem;
+                height: 4.75rem;
             }
         }
 
         .app-container {
-            box-sizing: border-box;
         }
 
         .room-container {
-            box-sizing: border-box;
             padding-bottom: 100px;
             width: 30%;
             height: calc(100% - 100px);
@@ -64,7 +58,6 @@
         }
 
         .msg-container {
-            box-sizing: border-box;
             padding-bottom: 100px;
             width: 100%;
             height: calc(100% - 100px);
