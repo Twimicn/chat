@@ -6,6 +6,8 @@ self.addEventListener('install', function (event) {
     let baseDir = '/';
     if (location.href.indexOf('/chat/') !== -1) {
         baseDir = '/chat/';
+    } else if (location.href.indexOf('/TwimiChat/') !== -1) {
+        baseDir = '/TwimiChat/';
     }
     event.waitUntil(
         caches.open(CATCH_VER).then(function (cache) {
@@ -13,8 +15,8 @@ self.addEventListener('install', function (event) {
                 baseDir,
                 baseDir + 'index.html',
                 baseDir + 'favicon.ico',
-                baseDir + 'dialog.js',
                 baseDir + 'lang/' + languageCode + '.json',
+                'https://bunnies.cc/BunnyDialog/dialog.js',
             ]);
         })
     );
