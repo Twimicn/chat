@@ -39,12 +39,14 @@
             background-color: #ededed;
             position: fixed;
             bottom: 0;
-            height: 48px;
+            height: 3rem;
+            padding: 0.5rem;
         }
 
         @media screen and (max-aspect-ratio: 9/16) {
             .bottom-bar {
-                padding-bottom: 20px;
+                padding-bottom: 1.5rem;
+                height: 4rem;
             }
         }
 
@@ -243,7 +245,7 @@
     <div id="room_list" class="room-container"></div>
     <div id="msg_container" class="msg-container"></div>
 </div>
-<div class="bottom-bar" style="padding: 0.5rem">
+<div class="bottom-bar">
     <button class="bcu btn outline" id="btn_pic">图片</button>
     <button class="bcu btn outline" id="btn_tts">语音</button>
     <label for="txt_msg"></label><input class="bcu input input-text" type="text" id="txt_msg" placeholder="">
@@ -589,7 +591,7 @@
 
         function initPassword(hash, userConf, passHash, password) {
             if (!password) {
-                dialog.title = curLang.prompt_password;
+                dialog.message = curLang.prompt_password;
                 dialog.innerHTML = '<input id="password" type="text" class="bcu input input-text" style="height: 32px;width: 300px;">';
                 let txt_password = document.getElementById('password');
                 dialog.show(e => {
@@ -664,7 +666,7 @@
 
 
         btn_tts.addEventListener('click', ev => {
-            dialog.title = curLang.input_voice;
+            dialog.message = curLang.input_voice;
             dialog.innerHTML = '<input id="txt_tts" type="text" class="bcu input input-text" style="height: 32px;width: 300px;">';
             let txt_tts = document.getElementById('txt_tts');
             dialog.show(e => {
@@ -699,7 +701,7 @@
         };
 
         window.playVideo = function (url) {
-            dialog.title = ' ';
+            dialog.message = '';
             dialog.innerHTML = `<video src="${url}" controls preload="metadata" style="max-height:500px;max-width:100%;"></video>`;
             dialog.show(e => {
                 dialog.innerHTML = ''
@@ -719,14 +721,14 @@
             let msgType = 'file';
             if (file.type.startsWith('image')) {
                 msgType = 'image';
-                dialog.title = curLang.confirm_picture;
+                dialog.message = curLang.confirm_picture;
                 dialog.innerHTML = `<div class="preview-box"><img src="${url}" alt="Preview" class="img-responsive"/></div>`;
             } else if (file.type.startsWith('video')) {
                 msgType = 'video';
-                dialog.title = curLang.confirm_video;
+                dialog.message = curLang.confirm_video;
                 dialog.innerHTML = '';
             } else {
-                dialog.title = curLang.confirm_file;
+                dialog.message = curLang.confirm_file;
                 dialog.innerHTML = '';
             }
             dialog.show(e => {
