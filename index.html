@@ -277,7 +277,7 @@
         let chatConf = {
             token: '3dZ5aNNfniYqQaxiZ3w9n8',
             room: 1,
-            access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImFiZmM0ZjkxNGRiYzgwZmU2ZmFmNjJkMWU1Y2E5MzgzMDFjZmQ4NDVhOTA5YTM2NmQwMDJjZWNjMjUwNjAzM2YxY2JlNzU1NzJjMDBjODczIn0.eyJhdWQiOiI4IiwianRpIjoiYWJmYzRmOTE0ZGJjODBmZTZmYWY2MmQxZTVjYTkzODMwMWNmZDg0NWE5MDlhMzY2ZDAwMmNlY2MyNTA2MDMzZjFjYmU3NTU3MmMwMGM4NzMiLCJpYXQiOjE1Nzg3NDA5MDgsIm5iZiI6MTU3ODc0MDkwOCwiZXhwIjoxNjEwMzYzMzA4LCJzdWIiOiIyODIiLCJzY29wZXMiOltdfQ.yeDMrzXuosJM-4bFKb5Yb7bxTVxfAQYwKdPYYyibGl38vQwUnboPrkWhfBNPrCK7eI12YIcRnYeOvc6VxBQleI77nl26-9TrhcNGqTMVz67cgs04Y-o4qJ5lpKfHfQ8mNxvUY_wpsdIDshB8dkN7QZLLLxjgDDYCi-7E-5fpUQ_B5UW0BYP0HJqP5wkjLrgPwT94VXyjZcx9yvYqD8aYIUHmR9kcH8OUodzEpu0k2UmVM1t7WcKTEiCSxH13gtBj4EUoMV7-6nVsr3oeMBifKQtXT7VQz-BgapsVW7CWhlBcyFshjND3HGryCDBz3RASadufzAbY-V-E410yeyOyLAM-JC6z6zF4txR2pFN_r-y7_MG0oI6XNxB2EeRWUYvJkiVntL4XZ15S91Z1r2ad9icGVlNA2Qx-e_PLTTnVF8278CnbS2sUj4nu9dXgpjafG2Fh2mxA_5PkvpFHcRkOMJQ5XsJPPkI4Q1Kqpa4vhTweTWd6B7mmuozgxWfLpStY66Vdg0qxJUpvMKmF7zom5OqFN7Inju4L9-8ZNkTucwmPOh3g1Qy1QUsybbZwZJFayK7u6jKLVfk3BAbZwOdHS2QBu8URn5ukdGu1CqWB8TuNs-_XwPktUzTnntiBku0ioz8rXWjL4bQoWA559NlcL6XvHXxojNVcpXli5BUkyqk'
+            access_token: '7FWvP1JhcGqLHxxGo81bIddicvOGjhQxVSysJH42tbtHohXDF9DU2NF7Qxfd',
         };
 
         if ('serviceWorker' in navigator) {
@@ -418,7 +418,7 @@
                     aes = a;
                 })
             }
-            let socket = new WebSocket(`wss://connect.websocket.in/v2/${rid}?token=${access_token}`);
+            let socket = new WebSocket(`wss://connect.websocket.in/v3/${rid}?apiKey=${access_token}`);
             socket.onmessage = function (e) {
                 let msg = JSON.parse(e.data);
                 if (password) {
