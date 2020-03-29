@@ -29,7 +29,7 @@
                 headers: HEADER,
                 body: `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&code=` + code
             }).then(r => r.json()).then(r => {
-                localStorage.setItem('expire', r.expire);
+                localStorage.setItem('chat_expire', r.expire);
                 let token = r.token;
                 fetch(`${URL}user/info`, {
                     method: 'post',
@@ -37,12 +37,12 @@
                     body: `client_id=${CLIENT_ID}&token=${token}`
                 }).then(r2 => r2.json()).then(r2 => {
                     if (r2.uid && r2.uid > 0) {
-                        localStorage.setItem('uid', r2.uid);
-                        localStorage.setItem('username', r2.username);
-                        localStorage.setItem('nickname', r2.nickname);
-                        let hash = localStorage.getItem('preHash') || '';
+                        localStorage.setItem('chat_uid', r2.uid);
+                        localStorage.setItem('chat_username', r2.username);
+                        localStorage.setItem('chat_nickname', r2.nickname);
+                        let hash = localStorage.getItem('chat_pre_hash') || '';
                         if (hash) {
-                            localStorage.removeItem('preHash');
+                            localStorage.removeItem('chat_pre_hash');
                         }
                         window.location = "/chat/index.html" + (hash ? ('#' + hash) : '');
                     }

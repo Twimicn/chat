@@ -514,12 +514,12 @@
         });
 
         function initUser() {
-            let uid = localStorage.getItem("uid");
-            let expire = (localStorage.getItem("expire") || 0) * 1000;
+            let uid = localStorage.getItem("chat_uid");
+            let expire = (localStorage.getItem("chat_expire") || 0) * 1000;
             if (!uid || (uid && expire < (new Date()).getTime())) {
                 let hash = location.hash.substr(1);
                 if (hash) {
-                    localStorage.setItem('preHash', hash);
+                    localStorage.setItem('chat_pre_hash', hash);
                 }
                 if (window.Twimi) {
                     Twimi.login('1679091c5a880faf6fb5e6087eb1b2dc');
@@ -542,7 +542,7 @@
                     headers: HEADER,
                     body: `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&code=` + ev.detail.code
                 }).then(r => r.json()).then(r => {
-                    localStorage.setItem('expire', r.expire);
+                    localStorage.setItem('chat_expire', r.expire);
                     let token = r.token;
                     fetch(`${URL}user/info`, {
                         method: 'post',
@@ -550,12 +550,12 @@
                         body: `client_id=${CLIENT_ID}&token=${token}`
                     }).then(r2 => r2.json()).then(r2 => {
                         if (r2.uid && r2.uid > 0) {
-                            localStorage.setItem('uid', r2.uid);
-                            localStorage.setItem('username', r2.username);
-                            localStorage.setItem('nickname', r2.nickname);
-                            let hash = localStorage.getItem('preHash') || '';
+                            localStorage.setItem('chat_uid', r2.uid);
+                            localStorage.setItem('chat_username', r2.username);
+                            localStorage.setItem('chat_nickname', r2.nickname);
+                            let hash = localStorage.getItem('chat_pre_hash') || '';
                             if (hash) {
-                                localStorage.removeItem('preHash');
+                                localStorage.removeItem('chat_pre_hash');
                             }
                             window.location = "/chat/index.html" + (hash ? ('#' + hash) : '');
                         }
@@ -566,9 +566,9 @@
 
         function initChat() {
             let hash = location.hash.substr(1);
-            let uid = localStorage.getItem("uid");
-            let username = localStorage.getItem("username");
-            let nickname = localStorage.getItem("nickname");
+            let uid = localStorage.getItem("chat_uid");
+            let username = localStorage.getItem("chat_username");
+            let nickname = localStorage.getItem("chat_nickname");
             let userConf = {
                 uid: uid,
                 username: username,
@@ -580,7 +580,7 @@
                     setTitle(`${r.name} - ${curLang.title}`);
                 }
                 if (r.password) {
-                    let password = localStorage.getItem(`hash_${hash}`);
+                    let password = localStorage.getItem(`chat_hash_${hash}`);
                     initPassword(hash, userConf, r.password, password);
                 } else {
                     chat = TinnyChat(userConf, chatConf);
@@ -600,7 +600,7 @@
                     if (password) {
                         sha256(password).then(checkHash => {
                             if (checkHash === passHash) {
-                                localStorage.setItem(`hash_${hash}`, password);
+                                localStorage.setItem(`chat_hash_${hash}`, password);
                                 chatConf.password = password;
                                 chat = TinnyChat(userConf, chatConf);
                             } else {
