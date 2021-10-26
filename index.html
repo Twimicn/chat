@@ -734,7 +734,7 @@
             }
             dialog.show(e => {
                 let data = new FormData();
-                data.append('file', file);
+                data.append('image', file);
                 fetch("https://yespic.vercel.app/ipfs/upload", {method: 'post', mode: 'cors', body: data,})
                     .then(res => res.json()).then(res => {
                     chat.send('https://yespic.vercel.app' + res.url, msgType);
